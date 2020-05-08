@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>公交路线规划</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <style>
+        html,body,#container{
+            height:100%;
+        }
+        .btn{
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            width: 11rem
+        }
+    </style>
+</head>
+<body>
+    <div id="container" ></div>
+    <div class="info"  style='min-width:10rem;'>
+        <img src="//a.amap.com/lbs/static/img/js-transferonapp.png" style='width:120px;height:120px'>
+        <div style='text-align: center'>手机扫码打开示例</div>
+    </div>
+    <input type='button' id='callApp' class="btn" value='点击调起高德地图'/>
+    
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b0e535c7628723e42691c20e2defec9f&plugin=AMap.ToolBar"/></script>
+    <script>
+        var map = new AMap.Map("container");
+        AMap.plugin(["AMap.Transfer"], function() {
+            var drivingOption = {
+                map:map,
+                city: '深圳市',
+                policy: AMap.TransferPolicy.LEAST_TIME
+            };
+            var transfer = new AMap.Transfer(drivingOption); //构造驾车导航类
+            //根据起终点坐标规划驾车路线
+            transfer.search([{keyword:'宝安文具批发市场',city:'2144'},{keyword:'圣淘沙',city:'2144'}],function(status,result){
+                button.onclick = function(){
+                    transfer.searchOnAMAP({
+                        origin:result.origin,
+                        destination:result.destination
+                    });
+                } 
+                 
+            });
+            
+        });
+        map.addControl(new AMap.ToolBar());
+        
+        var button = document.getElementById('callApp');
+        if(AMap.UA.mobile){
+            document.getElementsByClassName('info')[0].style.display='none';
+            button.style.fontSize = '16px';
+        }else{
+            button.style.marginRight = '10px';
+        }
+    </script>
+</body>
+</html>
